@@ -1,0 +1,2 @@
+# Runtime dependencies for KiCad LibGen LCSC.
+requests>=2.32

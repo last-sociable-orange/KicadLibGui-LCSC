@@ -1,0 +1,28 @@
+{
+ "code": 200,
+ "msg": null,
+ "result": {
+  "brandHomeVO": null,
+  "wmCatalogVOS": null,
+  "brandVOS": null,
+  "catalogVOS": null,
+  "productSearchResultVO": null,
+  "productTotalPage": null,
+  "isToDetail": true,
+  "isToBrand": null,
+  "isToCategory": false,
+  "tipProductDetailUrlVO": {
+   "productCode": "C2040",
+   "productModel": "RP2040",
+   "brandNameEn": "Raspberry Pi",
+   "catalogName": "Microcontrollers (MCU/MPU/SOC)"
+  },
+  "brandUrlMap": null,
+  "searchEngineProcess": null,
+  "scene": "REDIRECT_PRODUCT_DETAIL",
+  "totalCount": null,
+  "exactMatchResult": null,
+  "topResults": null
+ },
+ "ok": true
+}

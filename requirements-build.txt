@@ -1,0 +1,3 @@
+# Build dependencies (one-file executable).
+-r requirements.txt
+pyinstaller>=6.10

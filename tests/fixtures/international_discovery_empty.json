@@ -1,0 +1,34 @@
+{
+ "code": 200,
+ "msg": null,
+ "result": {
+  "brandHomeVO": null,
+  "wmCatalogVOS": [],
+  "brandVOS": [],
+  "catalogVOS": null,
+  "productSearchResultVO": null,
+  "productTotalPage": null,
+  "isToDetail": null,
+  "isToBrand": null,
+  "isToCategory": false,
+  "tipProductDetailUrlVO": null,
+  "brandUrlMap": null,
+  "searchEngineProcess": {
+   "preprocessedContent": "qqqzzzxxyy",
+   "judgeProcess": "qqqzzzxxyy->文描（完整关键字）\r\n",
+   "isNormal": null,
+   "searchValidWord": "qqqzzzxxyy",
+   "searchValidWordLight": null,
+   "hasModelSuggest": null,
+   "againJudgeHasResult": false,
+   "hasReplaceKeyword": null,
+   "judgeSuccessType": null,
+   "mappingCodeSet": null
+  },
+  "scene": "NO_RESULT",
+  "totalCount": 0,
+  "exactMatchResult": null,
+  "topResults": null
+ },
+ "ok": true
+}

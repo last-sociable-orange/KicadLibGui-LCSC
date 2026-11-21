@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kicad-lib-gen-lcsc"
+version = "1.0.0"
+description = "LCSC (szlcsc.com / lcsc.com) to KiCad components.db GUI"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "KiCad LibGen LCSC contributors" }]
+dependencies = ["requests>=2.32"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "pillow>=10"]
+build = ["pyinstaller>=6.10", "pillow>=10"]
+
+[project.gui-scripts]
+kicad-lib-gen-lcsc = "gui_main:main"
+
+[tool.setuptools]
+py-modules = ["gui_main", "version"]
+
+[tool.setuptools.packages.find]
+include = ["kicad_core*", "lcsc_core*", "services*", "gui*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The cache provider and pytest's tmp_path both create mode-0700 directories via
+# tempfile, which locked-down Windows sandboxes refuse to write into; tests use
+# the ``workdir`` fixture (a plain directory under .tmp/) instead.
+addopts = "-q -p no:cacheprovider"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    ".venv",
+    ".uv-cache",
+    "dist",
+    "build/lib",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "E501",   # long lines are handled by the formatter
+    "RUF001", # the UI and the data legitimately contain ±, Ω, ℃ and ×
+    "RUF002",
+    "RUF003",
+    "SIM105", # try/except/pass is explicit for best-effort cleanup
+    "SIM102", # nested ifs are often clearer in layout code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"gui/*" = ["BLE001", "S110"]
+"gui_main.py" = ["BLE001", "S110"]
+"tools/*" = ["T201"]
+"lcsc_core/cli.py" = ["T201"]

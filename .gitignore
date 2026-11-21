@@ -1,0 +1,35 @@
+# ---------------- Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+# pytest's mkdtemp leftovers from a run that could not write its cache
+pytest-cache-files-*/
+.ruff_cache/
+.venv/
+.uv-cache/
+.uv-python/
+.tmp/
+
+# ---------------- build output
+dist/
+build/lib/
+build/*.zip
+*.spec.bak
+
+# ---------------- local state that must never be committed
+# user settings, logs, the response cache and databases live outside the repo,
+# but a portable-mode run puts them here
+data/
+portable.txt
+*.db
+*.db-journal
+*.db-wal
+*.token
+
+# ---------------- editors / OS
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+*.swp

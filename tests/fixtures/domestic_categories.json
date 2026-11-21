@@ -1,0 +1,107 @@
+{
+ "code": 200,
+ "result": {
+  "电容 / 电阻 / 电感": {
+   "catalogId": 312,
+   "catalogName": "电容 / 电阻 / 电感",
+   "sonCatalogList": [
+    {
+     "catalogId": 312,
+     "catalogName": "电容",
+     "sonCatalogList": [
+      {
+       "catalogId": 313,
+       "catalogName": "贴片电容(MLCC)"
+      },
+      {
+       "catalogId": 431,
+       "catalogName": "直插独石电容(MLCC)"
+      }
+     ]
+    },
+    {
+     "catalogId": 308,
+     "catalogName": "电阻",
+     "sonCatalogList": [
+      {
+       "catalogId": 439,
+       "catalogName": "贴片电阻"
+      },
+      {
+       "catalogId": 11239,
+       "catalogName": "插件电阻"
+      }
+     ]
+    }
+   ]
+  },
+  "微控制器 / 逻辑器件": {
+   "catalogId": 470,
+   "catalogName": "微控制器 / 逻辑器件",
+   "sonCatalogList": [
+    {
+     "catalogId": 470,
+     "catalogName": "单片机 / 微控制器",
+     "sonCatalogList": [
+      {
+       "catalogId": 11329,
+       "catalogName": "单片机(MCU / MPU / SOC)"
+      },
+      {
+       "catalogId": 11328,
+       "catalogName": "数字信号处理器(DSP / DSC)"
+      }
+     ]
+    },
+    {
+     "catalogId": 487,
+     "catalogName": "逻辑器件",
+     "sonCatalogList": [
+      {
+       "catalogId": 11104,
+       "catalogName": "逻辑门"
+      },
+      {
+       "catalogId": 11311,
+       "catalogName": "反相器"
+      }
+     ]
+    }
+   ]
+  },
+  "二极管 / 晶体管": {
+   "catalogId": 319,
+   "catalogName": "二极管 / 晶体管",
+   "sonCatalogList": [
+    {
+     "catalogId": 319,
+     "catalogName": "二极管",
+     "sonCatalogList": [
+      {
+       "catalogId": 321,
+       "catalogName": "稳压二极管"
+      },
+      {
+       "catalogId": 373,
+       "catalogName": "肖特基二极管"
+      }
+     ]
+    },
+    {
+     "catalogId": 320,
+     "catalogName": "三极管 / MOS管 / 晶体管",
+     "sonCatalogList": [
+      {
+       "catalogId": 381,
+       "catalogName": "场效应管(MOSFET)"
+      },
+      {
+       "catalogId": 526,
+       "catalogName": "静电和浪涌保护(TVS / ESD)"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
