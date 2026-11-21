@@ -85,6 +85,15 @@ Two rules keep this maintainable:
 | Live paging | domestic page 2/50; international page 2/24 with a category filter |
 | In-place language switch | relabels, switches storefront, clears foreign results |
 | Dialogs | settings (both languages), batch import with a deliberately invalid row |
+| One-file build | `build\kicad_lib_gen_lcsc.spec` builds `dist\KiCadLibGenLCSC.exe` (13.3 MB) with PyInstaller 6.22.3 |
+
+**Caveat on the packaged binary:** it was built successfully, but this
+development environment refuses to *execute* a freshly built unsigned executable
+(`Access is denied`, and the same build in a restricted sandbox also cannot use
+`%TEMP%` for the one-file extraction), so the packaged `--self-test` has not been
+observed here. Run `dist\KiCadLibGenLCSC.exe --self-test` once on a normal
+machine, or `python gui_main.py --self-test`, before publishing an artifact. The
+same check is the last step of both build scripts.
 
 ## 7. Deliberate non-goals
 
