@@ -68,7 +68,7 @@ class DetailPanel(tk.Frame):
         title_row = tk.Frame(left, bg=theme.CARD)
         title_row.pack(anchor="w")
         self.mpn_label = tk.Label(title_row, text="", bg=theme.CARD, fg=theme.TEXT,
-                                  font=(theme.current().family, 13, "bold"))
+                                  font=theme.current().panel_title)
         self.mpn_label.pack(side="left")
         self.manufacturer_label = tk.Label(title_row, text="", bg=theme.CARD,
                                            fg=theme.MUTED, font=theme.current().small)
@@ -97,7 +97,7 @@ class DetailPanel(tk.Frame):
         self.clear_button.pack(side="left")
         self.save_button = primary_button(actions, t("detail.add"), self._on_save,
                                           padx=16, pady=3,
-                                          font=(theme.current().family, 9, "bold"))
+                                          font=theme.current().button)
         self.save_button.pack(side="right")
 
         body = tk.Frame(self.content, bg=theme.CARD)
@@ -119,7 +119,7 @@ class DetailPanel(tk.Frame):
         header.pack(fill="x", pady=(0, 3))
         self.overview_title = tk.Label(header, text=t("detail.overview"), bg=theme.CARD,
                                        fg=theme.MUTED,
-                                       font=(theme.current().family, 8, "bold"))
+                                       font=theme.current().section)
         self.overview_title.pack(side="left")
         self.params_link = link_label(header, t("detail.view_all"), self._show_params,
                                       fg=theme.ACCENT, font=theme.current().tiny)
@@ -142,6 +142,7 @@ class DetailPanel(tk.Frame):
             child.destroy()
         self.value_labels.clear()
         self.caption_labels.clear()
+        wrap = int(190 * theme.scale())
         for row_index, pair in enumerate(_OVERVIEW_ROWS):
             for col_index, (field, key) in enumerate(pair):
                 cell = tk.Frame(self.grid_frame, bg=theme.CARD)
@@ -153,14 +154,13 @@ class DetailPanel(tk.Frame):
                 self.caption_labels[field] = caption
                 value = tk.Label(cell, text="-", bg=theme.CARD, fg=theme.TEXT,
                                  font=theme.current().small, anchor="w", justify="left",
-                                 wraplength=190)
+                                 wraplength=wrap)
                 value.pack(side="left", fill="x", expand=True, anchor="n")
                 self.value_labels[field] = value
 
     def _build_mapping(self, parent: tk.Frame) -> None:
         self.mapping_title = tk.Label(parent, text=t("detail.mapping"), bg=theme.CARD,
-                                      fg=theme.MUTED,
-                                      font=(theme.current().family, 8, "bold"))
+                                      fg=theme.MUTED, font=theme.current().section)
         self.mapping_title.pack(anchor="w", pady=(0, 3))
 
         symbol_row = tk.Frame(parent, bg=theme.CARD)

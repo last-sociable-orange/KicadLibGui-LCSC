@@ -23,7 +23,7 @@ class AboutDialog(tk.Toplevel):
         outer.pack(fill="both", expand=True)
 
         tk.Label(outer, text=version.APP_NAME, bg=theme.CARD, fg=theme.TEXT,
-                 font=(theme.current().family, 16, "bold")).pack(anchor="w")
+                 font=theme.current().title).pack(anchor="w")
         tk.Label(outer, text=t("about.version", version=version.__version__), bg=theme.CARD,
                  fg=theme.MUTED, font=theme.current().small).pack(anchor="w", pady=(2, 12))
 

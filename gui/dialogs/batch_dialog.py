@@ -54,7 +54,7 @@ class BatchDialog(tk.Toplevel):
         header = tk.Frame(outer, bg=theme.CARD)
         header.pack(fill="x")
         tk.Label(header, text=t("batch.title"), bg=theme.CARD, fg=theme.TEXT,
-                 font=(theme.current().family, 14, "bold")).pack(side="left")
+                 font=theme.current().title).pack(side="left")
         self.rows_pill = Pill(header, "", fg=theme.TEXT_SOFT)
         self.rows_pill.pack(side="left", padx=(10, 0))
 

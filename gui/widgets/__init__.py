@@ -248,7 +248,7 @@ class Tooltip:
         frame = tk.Frame(window, bg="#1f2937", padx=8, pady=4)
         frame.pack()
         tk.Label(frame, text=self.text, bg="#1f2937", fg="white",
-                 font=("Segoe UI", 9)).pack()
+                 font=theme.current().tiny).pack()
         window.wm_geometry(f"+{x}+{y}")
         self._window = window
 

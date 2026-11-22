@@ -27,7 +27,7 @@ class Banner(tk.Frame):
         self._message_text = ""
 
         self.icon = tk.Label(self, text="✕", bg=theme.DANGER_BG, fg=theme.DANGER,
-                             font=(theme.current().family, 10, "bold"))
+                             font=theme.current().heading)
         self.icon.pack(side="left", padx=(10, 6), pady=7)
 
         self.message = tk.Label(

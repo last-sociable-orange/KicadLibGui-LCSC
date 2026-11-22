@@ -25,7 +25,7 @@ def show_parameters_dialog(parent: tk.Misc, product: ProductInfo, *, site: str =
                       highlightbackground=theme.BORDER, highlightthickness=1)
     header.pack(fill="x", padx=14, pady=(14, 8))
     tk.Label(header, text=part, bg=theme.CARD, fg=theme.TEXT,
-             font=(theme.current().family, 13, "bold")).pack(anchor="w")
+             font=theme.current().panel_title).pack(anchor="w")
     tk.Label(header, text=t("params.subtitle", count=len(pairs), site=site or "LCSC"),
              bg=theme.CARD, fg=theme.MUTED, font=theme.current().small).pack(anchor="w", pady=(2, 0))
 

@@ -75,17 +75,23 @@ class ResultsTable(tk.Frame):
         self.tree.bind("<<TreeviewSelect>>", self._handle_select)
         self.tree.bind("<Double-1>", lambda _event: self._handle_select())
 
-    # -- language --------------------------------------------------------
+    # -- language / scale ------------------------------------------------
 
     def _retitle(self) -> None:
+        factor = theme.scale()
         for key, width, anchor, stretch in self.COLUMN_KEYS:
             self.tree.heading(key, text=t(f"col.{key}").upper(), anchor=anchor)
-            self.tree.column(key, width=width, minwidth=60, anchor=anchor, stretch=stretch)
+            self.tree.column(key, width=int(width * factor), minwidth=60, anchor=anchor,
+                             stretch=stretch)
 
     def apply_language(self) -> None:
         self._retitle()
         if not self.products:
             self.empty.configure(text=t("results.empty"))
+
+    def apply_scale(self) -> None:
+        """Re-apply the column widths after the interface font size changed."""
+        self._retitle()
 
     # -- data ------------------------------------------------------------
 

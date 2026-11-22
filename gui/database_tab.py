@@ -57,7 +57,7 @@ class DatabaseTab(tk.Frame):
         title_row = tk.Frame(header, bg=theme.CARD)
         title_row.pack(fill="x")
         self.title_label = tk.Label(title_row, text=t("db.title"), bg=theme.CARD,
-                                    fg=theme.TEXT, font=(theme.current().family, 12, "bold"))
+                                    fg=theme.TEXT, font=theme.current().card_title)
         self.title_label.pack(side="left")
         self.count_pill = Pill(title_row, tn("db.count", 0), fg=theme.TEXT_SOFT)
         self.count_pill.pack(side="left", padx=(10, 0))
@@ -85,9 +85,7 @@ class DatabaseTab(tk.Frame):
 
         self.tree = ttk.Treeview(table_card, columns=[name for name, *_ in _COLUMNS],
                                  show="headings", selectmode="browse")
-        for key, width, anchor, stretch in _COLUMNS:
-            self.tree.heading(key, text=t(f"col.{key}").upper(), anchor=anchor)
-            self.tree.column(key, width=width, minwidth=60, anchor=anchor, stretch=stretch)
+        self._retitle_columns()
         scroll = ttk.Scrollbar(table_card, orient="vertical", command=self.tree.yview)
         xscroll = ttk.Scrollbar(table_card, orient="horizontal", command=self.tree.xview)
         self.tree.configure(yscrollcommand=scroll.set, xscrollcommand=xscroll.set)
@@ -116,7 +114,7 @@ class DatabaseTab(tk.Frame):
         top = tk.Frame(self.editor, bg=theme.CARD)
         top.pack(fill="x")
         self.editor_title = tk.Label(top, text="", bg=theme.CARD, fg=theme.TEXT,
-                                     font=(theme.current().family, 11, "bold"))
+                                     font=theme.current().panel_title)
         self.editor_title.pack(side="left")
         self.editor_subtitle = tk.Label(top, text="", bg=theme.CARD, fg=theme.MUTED,
                                         font=theme.current().tiny)
@@ -155,7 +153,18 @@ class DatabaseTab(tk.Frame):
         self.save_button = primary_button(actions, t("db.update_mapping"), self._save_mapping)
         self.save_button.pack(side="right")
 
-    # -- language --------------------------------------------------------
+    # -- language / scale --------------------------------------------------
+
+    def _retitle_columns(self) -> None:
+        factor = theme.scale()
+        for key, width, anchor, stretch in _COLUMNS:
+            self.tree.heading(key, text=t(f"col.{key}").upper(), anchor=anchor)
+            self.tree.column(key, width=int(width * factor), minwidth=60, anchor=anchor,
+                             stretch=stretch)
+
+    def apply_scale(self) -> None:
+        """Re-apply the column widths after the interface font size changed."""
+        self._retitle_columns()
 
     def apply_language(self) -> None:
         self.title_label.configure(text=t("db.title"))
@@ -168,8 +177,7 @@ class DatabaseTab(tk.Frame):
         self.save_button.configure(text=t("db.update_mapping"))
         self.delete_button.configure(text=t("db.delete"))
         self.params_link.configure(text=t("detail.view_all"))
-        for key, _width, anchor, _stretch in _COLUMNS:
-            self.tree.heading(key, text=t(f"col.{key}").upper(), anchor=anchor)
+        self._retitle_columns()
         if self.app.db_info is None:
             self.empty_label.configure(text=t("db.empty"))
             self.count_pill.set(tn("db.count", 0))

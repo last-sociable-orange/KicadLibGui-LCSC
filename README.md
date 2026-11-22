@@ -26,6 +26,8 @@ selector and paging.*
 - **Browse results** with part number, MPN, brand, package, stock, headline price
   and description; page through 30 results at a time, narrow by category
   (`类目` / `Category`), or load the next page into the same table.
+- **Scale the interface** from 8 to 20 pt in Settings — tables, dialogs and the
+  detail panel re-flow in place, no restart.
 - **See full details** for the selected part: every parameter the store reports,
   the datasheet link, the product page, and the complete price ladder.
 - **Save into `components.db`** with an explicit upsert that updates an existing
@@ -86,6 +88,37 @@ queried — the same rule as LCSC3D:
 
 Switching language rebuilds the interface in place and **clears the result table**,
 because those rows came from the other storefront.
+
+### Interface font size
+
+Settings → **界面字体大小 / Interface font size** sets the body size (8–20 pt).
+Every other size is derived from it and applied to named Tk fonts, so the change is
+immediate: headings, tables (including row height and column widths) and dialogs
+follow without restarting or losing the current selection.
+
+| 10 pt (default) | 14 pt |
+|---|---|
+| ![10 pt](docs/images/font-10.png) | ![14 pt](docs/images/font-14.png) |
+
+## KiCad database library
+
+`db_setup/` holds a ready-made `.kicad_dbl` for each platform
+(`components_db_windows.kicad_dbl`, `components_db_linux.kicad_dbl`). They map all
+80 columns of the `components` table, so KiCad's symbol chooser can browse the
+database the moment you register the file.
+
+- Register it in *Preferences → Manage Symbol Libraries → Database → Add*. The
+  library nickname becomes `components`, i.e. symbols are `components:<symbol>`.
+- Both files expect the database at the program's suggested location
+  (`%USERPROFILE%\KiCadLibGenLCSC\components.db` / `~/KiCadLibGenLCSC/components.db`);
+  edit `source.connection_string` if yours lives elsewhere.
+- You need an SQLite ODBC driver: [sqliteodbc](http://www.ch-werner.de/sqliteodbc/)
+  on Windows (`SQLite3 ODBC Driver`), `libsqliteodbc` on Linux (`SQLite3`).
+- The files are generated from the schema by `tools/gen_dbl.py`, and
+  `tests/test_dbl_files.py` fails if their field list and the table ever diverge.
+
+See [`db_setup/README.md`](db_setup/README.md) for the column-by-column mapping and
+how to rename a field.
 
 ## What lands in the database
 
@@ -195,11 +228,12 @@ lcsc_core/       storefront clients and everything else site-specific
   texts.py         bilingual interface strings
   cache.py         on-disk cache for detail responses
 services/        config, search orchestration, database, batch, logging (no Tk)
-gui/             app shell, theme, worker, widgets, dialogs, database tab
-tools/           probe_endpoints.py - verifies the storefront protocol
-tests/           fixtures + parser, backend, cache, batch, database, GUI tests
+gui/             app shell, theme (named fonts), worker, widgets, dialogs, database tab
+tools/           probe_endpoints.py (protocol check), gen_dbl.py (KiCad mapping)
+db_setup/        .kicad_dbl files for KiCad + how to use them
+tests/           fixtures + parser, backend, cache, batch, database, dbl, GUI tests
 build/           PyInstaller spec and platform build scripts
-docs/            PROTOCOL.md (verified endpoints), DEV_PLAN.md
+docs/            PROTOCOL.md (verified endpoints), DEV_PLAN.md, APPROVED-PLAN.md
 ```
 
 ### Build a one-file executable

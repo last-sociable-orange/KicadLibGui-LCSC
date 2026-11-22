@@ -38,6 +38,17 @@ class TestDefaults:
         assert config.Settings(page_size=45).page_size in config.PAGE_SIZES
         assert config.Settings(page_size=1000).page_size == max(config.PAGE_SIZES)
 
+    def test_font_size_defaults_and_is_clamped(self, isolated):
+        assert config.Settings().font_size == config.DEFAULT_FONT_SIZE
+        assert config.Settings(font_size=1).font_size == config.MIN_FONT_SIZE
+        assert config.Settings(font_size=99).font_size == config.MAX_FONT_SIZE
+        assert config.Settings(font_size=14).font_size == 14
+
+    def test_font_sizes_offered_are_inside_the_allowed_range(self):
+        assert min(config.FONT_SIZES) == config.MIN_FONT_SIZE
+        assert max(config.FONT_SIZES) == config.MAX_FONT_SIZE
+        assert config.DEFAULT_FONT_SIZE in config.FONT_SIZES
+
     def test_limits_are_clamped(self, isolated):
         settings = config.Settings(http_timeout=9999, request_interval_ms=-50,
                                    batch_delay_ms=99999)
@@ -51,13 +62,14 @@ class TestDefaults:
 
 class TestPersistence:
     def test_round_trip(self, isolated):
-        settings = config.Settings(language="en_US", page_size=60, cache_ttl=0)
+        settings = config.Settings(language="en_US", page_size=60, cache_ttl=0, font_size=13)
         path = settings.save()
         assert path.exists()
         reloaded = config.Settings.load()
         assert reloaded.language == "en_US"
         assert reloaded.page_size == 60
         assert reloaded.cache_ttl == 0
+        assert reloaded.font_size == 13
 
     def test_malformed_file_falls_back_to_defaults(self, isolated):
         target = config.settings_path()

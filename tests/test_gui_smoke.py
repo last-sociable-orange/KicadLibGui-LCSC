@@ -166,3 +166,52 @@ def test_language_switch_relabels_and_clears_foreign_results(app):
     app.apply_settings(previous_language="en_US")
     assert window.search_button.cget("text") == "搜索"
     assert dict(LANGUAGES)["zh_CN"]
+
+
+class TestFontSize:
+    def test_default_size_is_installed(self, app):
+        from gui import theme
+
+        assert theme.font_size() == app.settings.font_size
+
+    def test_named_fonts_exist_and_are_not_deleted(self, app):
+        from tkinter import font as tkfont
+
+        from gui import theme
+
+        for role in ("Base", "Small", "Tiny", "Section", "CardTitle", "PanelTitle", "Title"):
+            font = tkfont.nametofont(f"LCSC.{role}", root=app.root)
+            assert font.cget("family")
+            assert int(font.cget("size")) > 0
+        # The base role is what the window actually uses.
+        assert theme.current().base == "LCSC.Base"
+
+    def test_increasing_the_size_scales_fonts_rows_and_columns(self, app):
+        from tkinter import font as tkfont
+
+        from gui import theme
+        from services import config
+
+        window = app.window
+        app.search_service = FakeService()
+        window.search_var.set("C25804")
+        window.perform_search()
+        assert pump(app.root, 5.0, until=lambda: bool(window.results_table.products))
+        before = window.results_table.tree.column("mpn", "width")
+
+        app.settings.font_size = 16
+        app.apply_settings()
+
+        assert theme.font_size() == 16
+        base = tkfont.nametofont(theme.current().base, root=app.root)
+        small = tkfont.nametofont(theme.current().small, root=app.root)
+        assert int(base.cget("size")) == 16
+        assert int(small.cget("size")) == 15
+        assert window.results_table.tree.column("mpn", "width") > before
+        # The content-driven sash must still leave the results visible.
+        assert window.paned.sashpos(0) > 100
+
+        app.settings.font_size = config.DEFAULT_FONT_SIZE
+        app.apply_settings()
+        assert theme.font_size() == config.DEFAULT_FONT_SIZE
+        assert window.results_table.tree.column("mpn", "width") == before

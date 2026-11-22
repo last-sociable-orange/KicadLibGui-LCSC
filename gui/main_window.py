@@ -238,13 +238,13 @@ class MainWindow:
         search_card.pack(fill="x", padx=14, pady=(8, 6))
         self.search_section_label = tk.Label(
             search_card, text=t("search.section", site=self.site).upper(), bg=theme.CARD,
-            fg=theme.MUTED, font=(theme.current().family, 8, "bold"))
+            fg=theme.MUTED, font=theme.current().section)
         self.search_section_label.pack(anchor="w")
         row = tk.Frame(search_card, bg=theme.CARD)
         row.pack(fill="x", pady=(3, 0))
         self.search_var = tk.StringVar()
         self.search_entry = ttk.Entry(row, textvariable=self.search_var,
-                                      font=(theme.current().family, 11))
+                                      font=theme.current().entry)
         self.search_entry.pack(side="left", fill="x", expand=True)
         self.search_entry.bind("<Return>", lambda _event: self.perform_search())
         self.search_button = primary_button(row, t("search.button"), self.perform_search,
@@ -263,7 +263,7 @@ class MainWindow:
         results_header.pack(fill="x")
         self.results_title_label = tk.Label(results_header, text=t("results.title"),
                                             bg=theme.CARD, fg=theme.TEXT,
-                                            font=(theme.current().family, 12, "bold"))
+                                            font=theme.current().card_title)
         self.results_title_label.pack(side="left")
         self.results_pill = Pill(results_header, t("results.count", count=0), fg=theme.MUTED)
         self.results_pill.pack(side="left", padx=(10, 0))
@@ -318,11 +318,18 @@ class MainWindow:
         return page
 
     def _fit_detail_pane(self) -> None:
+        """Give the detail pane exactly the height its content asks for.
+
+        The requirement is measured rather than hard-coded so a larger interface
+        font (which makes the overview grid taller) does not clip it.
+        """
         try:
             self.root.update_idletasks()
             height = self.paned.winfo_height()
-            if height > 320:
-                self.paned.sashpos(0, max(150, height - 250))
+            if height <= 200:
+                return
+            needed = max(150, self.detail.winfo_reqheight() + 8)
+            self.paned.sashpos(0, max(120, height - min(needed, height - 120)))
         except (tk.TclError, IndexError):  # pragma: no cover
             pass
 
@@ -357,6 +364,7 @@ class MainWindow:
         self.status_version.pack(side="right")
 
     def _bind_shortcuts(self) -> None:
+        self.root.bind("<<ThemeFontSize>>", lambda _event: self._after_font_change())
         for sequence, handler in (
             ("<Control-o>", lambda: self.open_database_dialog()),
             ("<Control-O>", lambda: self.open_database_dialog()),
@@ -378,6 +386,24 @@ class MainWindow:
     def _on_escape(self, _event=None) -> None:
         if self.banner.visible:
             self.banner.hide()
+
+    # ------------------------------------------------------------------
+    # Font size
+    # ------------------------------------------------------------------
+
+    def _after_font_change(self) -> None:
+        """Re-fit pixel geometry after the named fonts changed size."""
+        try:
+            self.root.update_idletasks()
+        except tk.TclError:  # pragma: no cover - shutting down
+            return
+        self.results_table.apply_scale()
+        self.database_tab.apply_scale()
+        self._fit_detail_pane()
+
+    def refresh_layout(self) -> None:
+        """Public hook for the app after a theme change."""
+        self._after_font_change()
 
     # ------------------------------------------------------------------
     # Language

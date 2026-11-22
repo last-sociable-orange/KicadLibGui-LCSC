@@ -52,7 +52,7 @@ class SettingsDialog(tk.Toplevel):
         outer.pack(fill="both", expand=True)
 
         tk.Label(outer, text=t("settings.title"), bg=theme.CARD, fg=theme.TEXT,
-                 font=(theme.current().family, 15, "bold")).pack(anchor="w")
+                 font=theme.current().title).pack(anchor="w")
         tk.Label(outer, text=t("settings.config_folder",
                                path=self.app.settings.config_folder),
                  bg=theme.CARD, fg=theme.MUTED, font=theme.current().small,
@@ -93,6 +93,14 @@ class SettingsDialog(tk.Toplevel):
 
         left = tk.Frame(limits, bg=theme.CARD)
         left.grid(row=0, column=0, sticky="nw", padx=(0, 18))
+        tk.Label(left, text=t("settings.font_size"), bg=theme.CARD, fg=theme.TEXT_SOFT,
+                 font=theme.current().small).pack(anchor="w")
+        self.font_size_var = tk.StringVar()
+        self.font_size_combo = ttk.Combobox(
+            left, textvariable=self.font_size_var, state="readonly", width=8,
+            values=[str(value) for value in config.FONT_SIZES], font=theme.current().base)
+        self.font_size_combo.pack(anchor="w", pady=(3, 12))
+
         tk.Label(left, text=t("settings.page_size"), bg=theme.CARD, fg=theme.TEXT_SOFT,
                  font=theme.current().small).pack(anchor="w")
         self.page_size_var = tk.StringVar()
@@ -175,6 +183,7 @@ class SettingsDialog(tk.Toplevel):
         settings = self.app.settings
         self.db_var.set(settings.database_path)
         self.language_var.set(dict(LANGUAGES).get(settings.language, ""))
+        self.font_size_var.set(str(settings.font_size))
         self.page_size_var.set(str(settings.page_size))
         self.timeout_var.set(str(settings.http_timeout))
         self.interval_var.set(str(settings.request_interval_ms))
@@ -235,6 +244,10 @@ class SettingsDialog(tk.Toplevel):
         settings = self.app.settings
         settings.database_path = database
         settings.page_size = page_size
+        try:
+            settings.font_size = int(self.font_size_var.get())
+        except (TypeError, ValueError):
+            settings.font_size = config.DEFAULT_FONT_SIZE
         settings.http_timeout = timeout
         settings.request_interval_ms = interval
         settings.batch_delay_ms = delay

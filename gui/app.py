@@ -37,10 +37,11 @@ class App:
         self.settings.normalise()
         texts.set_language(self.settings.language)
         setup_logging(self.settings.log_level, portable=self.settings.portable)
-        logger.info("Starting %s %s (%s)", version.APP_NAME, version.__version__,
-                    self.settings.language)
+        logger.info("Starting %s %s (%s, font %s)", version.APP_NAME, version.__version__,
+                    self.settings.language, self.settings.font_size)
+        self._theme_font_size = self.settings.font_size
 
-        self.root = self._create_window()
+        self.root = self._create_window(self.settings.font_size)
         self.theme = theme.current()
         self.root.geometry("1180x860")
         self.root.minsize(940, 640)
@@ -72,7 +73,7 @@ class App:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _create_window() -> tk.Tk:
+    def _create_window(font_size: int | None = None) -> tk.Tk:
         """Create the Tk root, retrying transient Tcl/Tk library I/O errors."""
         last_error: BaseException | None = None
         for attempt in range(4):
@@ -80,7 +81,7 @@ class App:
             try:
                 root = tk.Tk()
                 root.withdraw()
-                theme.apply(root)
+                theme.apply(root, font_size=font_size)
                 return root
             except tk.TclError as exc:
                 last_error = exc
@@ -186,6 +187,12 @@ class App:
         self.settings.save()
         logging.getLogger().setLevel(
             getattr(logging, self.settings.log_level.upper(), logging.INFO))
+
+        if self.settings.font_size != self._theme_font_size:
+            theme.resize(self.root, self.settings.font_size)
+            self._theme_font_size = self.settings.font_size
+            self.window.refresh_layout()
+            logger.info("Interface font size: %s pt", self.settings.font_size)
 
         language_changed = (previous_language is not None
                             and previous_language != self.settings.language)

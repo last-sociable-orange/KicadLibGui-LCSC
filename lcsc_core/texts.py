@@ -176,6 +176,7 @@ _STRINGS: dict[str, tuple[str, str]] = {
         "(CNY), English searches LCSC (USD). The window is rebuilt immediately.",
     ),
     "settings.database": ("数据库", "Database"),
+    "settings.font_size": ("界面字体大小", "Interface font size"),
     "settings.page_size": ("每页结果数", "Results per page"),
     "settings.timeout": ("HTTP 超时（秒）", "HTTP timeout (seconds)"),
     "settings.interval": ("请求间隔（毫秒）", "Delay between requests (ms)"),

@@ -60,6 +60,7 @@ Two rules keep this maintainable:
 | 3 | Database tab (browse/filter/edit/delete/duplicates), detail enrichment with caching, paging controls | done |
 | 4 | Batch import (C-number CSV), settings dialog, on-disk response cache | done |
 | 5 | PyInstaller spec + build scripts, README, self-test, lint, verification, commit | done |
+| 6 | Follow-up: interface font size (8–20 pt via named fonts), regenerated KiCad `.kicad_dbl` mappings with a schema-drift test | done |
 
 ## 5. Deviations from the approved plan (all improvements)
 
@@ -77,14 +78,16 @@ Two rules keep this maintainable:
 | Check | Result |
 |---|---|
 | `python tools/probe_endpoints.py` | 52/52 live checks pass; fixtures written |
-| `pytest` | 168 tests pass, offline, no network |
+| `pytest` | 196 tests pass, offline, no network |
 | `ruff check .` | clean |
 | `python gui_main.py --self-test` | `SELF-TEST OK` |
 | `python gui_main.py --smoke-test` | window builds and closes |
 | Live search, both languages | `C25804` → 7 parameters + datasheet; `C2040` → 9 parameters, USD ladder |
 | Live paging | domestic page 2/50; international page 2/24 with a category filter |
 | In-place language switch | relabels, switches storefront, clears foreign results |
-| Dialogs | settings (both languages), batch import with a deliberately invalid row |
+| In-place font resize | 10 → 14 pt: named fonts, row heights, column widths and the detail sash all re-flow without a rebuild |
+| KiCad mapping files | `db_setup/*.kicad_dbl` regenerated from `ALL_COLUMNS`; `tests/test_dbl_files.py` pins the 80-column mapping |
+| Dialogs | settings (both languages, including the font size control), batch import with a deliberately invalid row |
 | One-file build | `build\kicad_lib_gen_lcsc.spec` builds `dist\KiCadLibGenLCSC.exe` (13.3 MB) with PyInstaller 6.22.3 |
 
 **Caveat on the packaged binary:** it was built successfully, but this

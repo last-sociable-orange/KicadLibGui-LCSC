@@ -26,6 +26,11 @@ LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 #: Results per page offered in the GUI.  Both storefronts are asked for 30.
 PAGE_SIZES = (30, 60, 90)
 DEFAULT_PAGE_SIZE = 30
+#: Interface font sizes in points; the theme derives every other size from this.
+FONT_SIZES = (8, 9, 10, 11, 12, 13, 14, 16, 18, 20)
+DEFAULT_FONT_SIZE = 10
+MIN_FONT_SIZE = 8
+MAX_FONT_SIZE = 20
 DEFAULT_HTTP_TIMEOUT = 20
 #: Politeness: minimum gap between two requests to the same storefront.
 DEFAULT_REQUEST_INTERVAL_MS = 350
@@ -165,6 +170,7 @@ class Settings:
     database_path: str = field(default_factory=lambda: str(default_database_path()))
     language: str = DEFAULT_LANGUAGE
     page_size: int = DEFAULT_PAGE_SIZE
+    font_size: int = DEFAULT_FONT_SIZE
     http_timeout: int = DEFAULT_HTTP_TIMEOUT
     request_interval_ms: int = DEFAULT_REQUEST_INTERVAL_MS
     batch_delay_ms: int = DEFAULT_BATCH_DELAY_MS
@@ -183,6 +189,7 @@ class Settings:
         self.language = normalise_language(self.language)
         if self.page_size not in PAGE_SIZES:
             self.page_size = min(PAGE_SIZES, key=lambda value: abs(value - int(self.page_size)))
+        self.font_size = max(MIN_FONT_SIZE, min(MAX_FONT_SIZE, int(self.font_size)))
         self.http_timeout = max(5, min(120, int(self.http_timeout)))
         self.request_interval_ms = max(0, min(5000, int(self.request_interval_ms)))
         self.batch_delay_ms = max(0, min(10000, int(self.batch_delay_ms)))
