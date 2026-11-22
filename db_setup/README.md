@@ -8,9 +8,11 @@ chooser:
 | `components_db_windows.kicad_dbl` | Windows, `Driver={SQLite3 ODBC Driver}` |
 | `components_db_linux.kicad_dbl` | Linux, `Driver={SQLite3}` |
 
-They describe the same library; only the ODBC connection string differs. Both list
-all 80 columns in table order, and `tests/test_dbl_files.py` fails if the mapping
-and `kicad_core.models.ALL_COLUMNS` ever drift apart.
+They describe the same library; only the ODBC connection string differs — and that
+string is unchanged from the previous setup. Both list all 80 columns **in the same
+order as the previous files**, with `QtyAvailable` added after `PartStatus`, and
+`tests/test_dbl_files.py` fails if the mapping and
+`kicad_core.models.ALL_COLUMNS` ever drift apart.
 
 ## Before you use them
 
@@ -18,17 +20,17 @@ and `kicad_core.models.ALL_COLUMNS` ever drift apart.
    - Windows: [sqliteodbc](http://www.ch-werner.de/sqliteodbc/) (`sqlite3odbc.dll`),
      registered as `SQLite3 ODBC Driver`.
    - Linux: `apt install libsqliteodbc` (driver name `SQLite3`).
-2. **Point the connection string at your database.** The defaults expect the
-   program's suggested location:
+2. **The connection strings are exactly as they were in the previous setup** — a
+   path relative to the current directory:
 
    | Platform | Connection string |
    |---|---|
-   | Windows | `Driver={SQLite3 ODBC Driver};Database=${USERPROFILE}\KiCadLibGenLCSC\components.db` |
-   | Linux | `Driver={SQLite3};Database=${HOME}/KiCadLibGenLCSC/components.db` |
+   | Windows | `Driver={SQLite3 ODBC Driver};Database=${CWD}\..\kicad_lib_szlcsc\components.db` |
+   | Linux | `Driver={SQLite3};Database=${CWD}/../kicad_lib/components.db` |
 
-   KiCad expands `${USERPROFILE}` / `${HOME}` from the environment. If your database
-   lives somewhere else — or your KiCad build does not expand the variable — replace
-   the whole value with an absolute path:
+   They were left untouched so the existing KiCad setup keeps working. If your
+   database lives somewhere else, replace the whole value with the path you want —
+   an absolute path is simplest:
 
    ```
    Driver={SQLite3 ODBC Driver};Database=D:\KiCad\components.db

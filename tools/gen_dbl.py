@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from kicad_core.models import ALL_COLUMNS  # noqa: E402
+from kicad_core.models import ALL_COLUMNS, PARAM_COUNT  # noqa: E402
 
 OUT = ROOT / "db_setup"
 
@@ -34,12 +34,55 @@ _VISIBLE_ON_ADD = {"Value"}
 #: library working and the mapping unambiguous.
 _DISPLAY_NAMES: dict[str, str] = {}
 
+#: Field order as the previous files had it, with ``QtyAvailable`` (new: the stock
+#: the storefront reported) inserted after ``PartStatus`` where it belongs.  Keeping
+#: the old order means the chooser columns appear where the user expects them.
+_HEAD_ORDER = (
+    "ID",
+    "Description",
+    "Keywords",
+    "Value",
+    "Manufacturer",
+    "ManufacturerProductNumber",
+    "KicadSymbolLibrary",
+    "KicadFootprintLibrary",
+    "Package",
+    "PartStatus",
+    "QtyAvailable",
+    "Distributor",
+    "DistributorProductNumber",
+    "UnitPrice",
+    "ProductUrl",
+    "DatasheetUrl",
+)
+
+
+def field_order() -> tuple[str, ...]:
+    """The head columns followed by the 32 parameter/value pairs."""
+    tail = tuple(
+        name
+        for index in range(1, PARAM_COUNT + 1)
+        for name in (f"Param{index:02d}", f"Value{index:02d}")
+    )
+    order = _HEAD_ORDER + tail
+    missing = set(ALL_COLUMNS) - set(order)
+    extra = set(order) - set(ALL_COLUMNS)
+    if missing or extra:
+        raise SystemExit(
+            "field order no longer matches kicad_core.models.ALL_COLUMNS "
+            f"(missing={sorted(missing)}, extra={sorted(extra)})"
+        )
+    return order
+
+#: The connection strings are kept exactly as the user already had them: a path
+#: relative to the current directory, so an existing KiCad setup keeps working
+#: without editing.  Change them here (and rerun) if the database moves.
 CONNECTION_STRINGS = {
     "windows": (
         "Driver={SQLite3 ODBC Driver};"
-        "Database=${USERPROFILE}\\KiCadLibGenLCSC\\components.db"
+        "Database=${CWD}\\..\\kicad_lib_szlcsc\\components.db"
     ),
-    "linux": "Driver={SQLite3};Database=${HOME}/KiCadLibGenLCSC/components.db",
+    "linux": "Driver={SQLite3};Database=${CWD}/../kicad_lib/components.db",
 }
 
 
@@ -51,7 +94,7 @@ def fields() -> list[dict[str, object]]:
             "visible_on_add": column in _VISIBLE_ON_ADD,
             "visible_in_chooser": column not in _HIDDEN_IN_CHOOSER,
         }
-        for column in ALL_COLUMNS
+        for column in field_order()
     ]
 
 

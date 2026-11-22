@@ -57,10 +57,23 @@ class TestShape:
 
 
 class TestFields:
-    def test_every_column_is_mapped_exactly_once_in_table_order(self, document):
+    def test_every_column_is_mapped_exactly_once(self, document):
         columns = [field["column"] for field in document["libraries"][0]["fields"]]
-        assert columns == list(ALL_COLUMNS)
         assert len(columns) == 80
+        assert len(set(columns)) == 80
+        assert set(columns) == set(ALL_COLUMNS)
+
+    def test_field_order_is_the_one_the_previous_files_used(self, document):
+        """The chooser columns must not jump around for an existing setup."""
+        columns = [field["column"] for field in document["libraries"][0]["fields"]]
+        assert columns[:16] == [
+            "ID", "Description", "Keywords", "Value", "Manufacturer",
+            "ManufacturerProductNumber", "KicadSymbolLibrary", "KicadFootprintLibrary",
+            "Package", "PartStatus", "QtyAvailable", "Distributor",
+            "DistributorProductNumber", "UnitPrice", "ProductUrl", "DatasheetUrl",
+        ]
+        assert columns[16:] == [name for index in range(1, PARAM_COUNT + 1)
+                                for name in (f"Param{index:02d}", f"Value{index:02d}")]
 
     def test_only_value_is_written_when_a_symbol_is_placed(self, document):
         visible = [field["column"] for field in document["libraries"][0]["fields"]
@@ -101,16 +114,15 @@ class TestPlatforms:
     def test_both_files_describe_the_same_library(self):
         assert self._without_source("windows") == self._without_source("linux")
 
-    def test_connection_strings_use_the_platform_driver_and_home(self):
+    def test_connection_strings_use_the_platform_driver_and_cwd(self):
         windows = load("windows")["source"]["connection_string"]
         linux = load("linux")["source"]["connection_string"]
         assert "{SQLite3 ODBC Driver}" in windows
-        assert "${USERPROFILE}" in windows
-        assert "\\KiCadLibGenLCSC\\components.db" in windows
+        assert windows.startswith("Driver={SQLite3 ODBC Driver};Database=${CWD}\\")
+        assert windows.endswith("components.db")
 
-        assert linux.startswith("Driver={SQLite3};")
-        assert "${HOME}" in linux
-        assert "/KiCadLibGenLCSC/components.db" in linux
+        assert linux.startswith("Driver={SQLite3};Database=${CWD}/")
+        assert linux.endswith("components.db")
 
 
 class TestDatabase:

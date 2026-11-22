@@ -86,7 +86,7 @@ Two rules keep this maintainable:
 | Live paging | domestic page 2/50; international page 2/24 with a category filter |
 | In-place language switch | relabels, switches storefront, clears foreign results |
 | In-place font resize | 10 → 14 pt: named fonts, row heights, column widths and the detail sash all re-flow without a rebuild |
-| KiCad mapping files | `db_setup/*.kicad_dbl` regenerated from `ALL_COLUMNS`; `tests/test_dbl_files.py` pins the 80-column mapping |
+| KiCad mapping files | `db_setup/*.kicad_dbl` regenerated from the schema: `QtyAvailable` added, connection strings and field order left exactly as they were; `tests/test_dbl_files.py` pins the 80-column mapping |
 | Dialogs | settings (both languages, including the font size control), batch import with a deliberately invalid row |
 | One-file build | `build\kicad_lib_gen_lcsc.spec` builds `dist\KiCadLibGenLCSC.exe` (13.3 MB) with PyInstaller 6.22.3 |
 

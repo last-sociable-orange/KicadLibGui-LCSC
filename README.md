@@ -109,9 +109,11 @@ database the moment you register the file.
 
 - Register it in *Preferences → Manage Symbol Libraries → Database → Add*. The
   library nickname becomes `components`, i.e. symbols are `components:<symbol>`.
-- Both files expect the database at the program's suggested location
-  (`%USERPROFILE%\KiCadLibGenLCSC\components.db` / `~/KiCadLibGenLCSC/components.db`);
-  edit `source.connection_string` if yours lives elsewhere.
+- The connection strings are unchanged from the previous KiCad LibGen setup
+  (`Driver={SQLite3 ODBC Driver};Database=${CWD}\..\kicad_lib_szlcsc\components.db`
+  on Windows, `Driver={SQLite3};Database=${CWD}/../kicad_lib/components.db` on
+  Linux), so an existing configuration keeps working; edit
+  `source.connection_string` if the database moves.
 - You need an SQLite ODBC driver: [sqliteodbc](http://www.ch-werner.de/sqliteodbc/)
   on Windows (`SQLite3 ODBC Driver`), `libsqliteodbc` on Linux (`SQLite3`).
 - The files are generated from the schema by `tools/gen_dbl.py`, and
